@@ -6,11 +6,12 @@ import io
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def home():
     return render_template('home.html')
  #changes
-# Load the trained model with h5
+# Load the trained model
 model = tf.keras.models.load_model('mnist_cnn.h5')
 
 

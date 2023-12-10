@@ -9,8 +9,8 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     return render_template('home.html')
-
-# Load the trained model
+ #changes
+# Load the trained model with h5
 model = tf.keras.models.load_model('mnist_cnn.h5')
 
 
@@ -24,6 +24,7 @@ def prepare_image(image, target_size):
     image /= 255.0
     return image
 
+#small change
 
 @app.route('/predict', methods=['POST'])
 def predict():

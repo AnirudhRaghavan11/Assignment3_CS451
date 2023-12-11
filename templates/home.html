@@ -7,29 +7,28 @@
     <title>MNIST Digit Classifier</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
-            background-color: #f3f3f3;
+            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
+            color: #333;
         }
         .container {
             width: 80%;
-            margin: auto;
+            margin: 20px auto;
             overflow: hidden;
         }
         header {
-            background: #50b3a2;
+            background: #4CAF50;
             color: white;
-            padding-top: 30px;
-            min-height: 70px;
-            border-bottom: #e8491d 3px solid;
+            padding: 10px 0;
+            border-bottom: #388E3C 4px solid;
         }
         header a {
             color: #ffffff;
             text-decoration: none;
-            text-transform: uppercase;
-            font-size: 16px;
+            font-size: 18px;
         }
         header ul {
             padding: 0;
@@ -39,7 +38,7 @@
         }
         header li {
             display: inline;
-            padding: 0 20px 0 20px;
+            padding: 0 15px;
         }
         header #branding {
             float: left;
@@ -52,12 +51,33 @@
             margin-top: 10px;
         }
         header .highlight, header .current a {
-            color: #e8491d;
+            color: #FFC107;
             font-weight: bold;
         }
         header a:hover {
-            color: #ffffff;
+            color: #FFEB3B;
             font-weight: bold;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input[type=file] {
+            border: 1px solid #ddd;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        input[type=submit] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        input[type=submit]:hover {
+            background-color: #388E3C;
         }
     </style>
 </head>
@@ -70,7 +90,6 @@
             <nav>
                 <ul>
                     <li class="current"><a href="/">Home</a></li>
-
                 </ul>
             </nav>
         </div>
@@ -79,10 +98,39 @@
         <h2>Welcome to the MNIST Digit Classifier API</h2>
         <p>This API allows you to classify handwritten digits using a Convolutional Neural Network model.</p>
 
-        <form action="/predict" method="post" enctype="multipart/form-data">
-            <input type="file" name="file" required>
+        <form id="digitForm" action="/predict" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" id="fileInput" required>
             <input type="submit" value="Predict">
+            <p id="fileName"></p>
+            <p id="result"></p>
         </form>
     </div>
+
+    <script>
+        // Simple JavaScript to update the text when a file is selected
+        document.getElementById('fileInput').addEventListener('change', function() {
+            var fileName = this.files[0].name;
+            document.getElementById('fileName').innerText = 'Selected file: ' + fileName;
+        });
+    </script>
+    <script>
+        document.getElementById('digitForm').addEventListener('submit', function(e) {
+        e.preventDefault();  // Prevent the default form submission
+
+        var formData = new FormData(this);
+        fetch('/predict', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('result').innerText = 'Recognized Digit: ' + data.digit;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('result').innerText = 'Error predicting digit';
+        });
+    });
+    </script>
 </body>
 </html>
